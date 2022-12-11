@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daoblunt.dao.CustomerMapper">
+
+    <resultMap id="resultCustomerMap" type="customer">
+        <id column="customer_id" property="customerId"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="address" property="address"/>
+        <result column="company" property="company"/>
+
+        <collection property="orderList" ofType="order">
+            <id column="order_id" property="orderId"/>
+            <result column="sequence" property="sequence"/>
+            <result column="price" property="price"/>
+            <result column="status" property="status"/>
+        </collection>
+    </resultMap>
+    <!--查询所有客户-->
+    <select id="findAll" resultMap="resultCustomerMap">
+        select * from (select * from sys_customer c left join sys_order o on c.customer_id=o.c_id) order_customer where order_customer.u_id=#{userId} ;
+    </select>
+    <!--添加客户-->
+    <insert id="addCustomer" parameterType="customer" useGeneratedKeys="true" keyProperty="customerId">
+        insert into sys_customer values (#{customerId},#{customerName},#{phone},#{email},#{address},#{company});
+    </insert>
+    <!--删除客户-->
+    <delete id="deleteByCustomerId" parameterType="int">
+        delete from sys_customer where customer_id=#{customerId};
+    </delete>
+    <!--修改客户信息-->
+    <update id="update" parameterType="customer">
+        update sys_customer
+        <set>
+            <if test="customerName!=null and customerName!=''">
+                customer_name=#{customerName},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone=#{phone},
+            </if>
+            <if test="email!=null and email!=''">
+                email=#{email},
+            </if>
+            <if test="address!=null and address!=''">
+                address=#{address},
+            </if>
+            <if test="company!=null and company!=''">
+                company=#{company}
+            </if>
+        </set>
+        where customer_id=#{customerId};
+    </update>
+</mapper>

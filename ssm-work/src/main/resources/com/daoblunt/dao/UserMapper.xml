@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daoblunt.dao.UserMapper">
+
+    <resultMap id="resultUserMap" type="user">
+        <id column="user_id" property="userId"/>
+        <result column="username" property="userName"/>
+        <result column="password" property="password"/>
+    </resultMap>
+
+    <!--添加用户-->
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into sys_user values (#{userId},#{userName},#{password});
+    </insert>
+    <!--根据用户名查询-->
+    <select id="findByUserName" parameterType="user" resultMap="resultUserMap">
+        select * from sys_user where username=#{userName}
+    </select>
+    <!--修改用户名和密码-->
+    <update id="updateUserNameAndPassword" parameterType="user">
+        update sys_user
+        <set>
+            <if test="userName!=null and userName!=''">
+                username=#{userName},
+            </if>
+            <if test="password!=null and password!=''">
+                password=#{password}
+            </if>
+        </set>
+        where user_id=#{userId}
+    </update>
+</mapper>
