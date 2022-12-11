@@ -1,5 +1,6 @@
 -- 创建数据库
 create database ssmdb;
+use ssmdb;
 -- 用户表
 CREATE TABLE sys_user ( user_id INT PRIMARY KEY auto_increment, username VARCHAR ( 20 ) NOT NULL UNIQUE, `password` VARCHAR ( 10 ) NOT NULL );-- 客户表
 CREATE TABLE sys_customer (
